@@ -176,10 +176,28 @@ input.invalid { border-color: var(--accent-2); }
     border-radius: var(--radius);
     box-shadow: var(--shadow);
 }
+.event-card {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    min-width: 0;
+    overflow: hidden;
+}
 .poster { position: relative; height: 230px; overflow: hidden; border-radius: var(--radius) var(--radius) 0 0; }
 .poster img { width: 100%; height: 100%; object-fit: cover; transition: all .25s ease; }
 .event-card:hover .poster img { transform: scale(1.04); }
 .card-body, .panel, .auth-card { padding: 18px; }
+.card-body {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 14px;
+}
+.card-body h3 {
+    overflow-wrap: anywhere;
+}
+.card-body .btn {
+    margin-top: auto;
+}
 .badge {
     display: inline-flex;
     min-height: 28px;
@@ -220,8 +238,10 @@ input.invalid { border-color: var(--accent-2); }
     padding: 24px;
 }
 .text-link {
-    display: inline-flex;
-    margin-top: 18px;
+    display: flex;
+    width: fit-content;
+    margin-top: 24px;
+    clear: both;
     color: var(--accent-3);
     font-weight: 700;
 }
