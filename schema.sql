@@ -51,12 +51,12 @@ CREATE TABLE associations (
 );
 
 INSERT INTO utilisateurs(email, mot_de_passe_hash, prenom, nom, role, est_approuve, avatar_url, cree_le) VALUES
-('admin@omnes.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'Admin', 'Omnes', 'admin', 1, NULL, NOW()),
-('bde@omnes.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'Lea', 'Martin', 'organisateur', 1, NULL, NOW()),
-('sport@omnes.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'Nassim', 'Diallo', 'organisateur', 1, NULL, NOW()),
-('alice@omnes.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'Alice', 'Moreau', 'participant', 1, NULL, NOW()),
-('hugo@omnes.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'Hugo', 'Bernard', 'participant', 1, NULL, NOW()),
-('ines@omnes.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', 'Ines', 'Petit', 'participant', 1, NULL, NOW());
+('admin@omnes.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Admin', 'Omnes', 'admin', 1, NULL, NOW()),
+('bde@omnes.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Lea', 'Martin', 'organisateur', 1, NULL, NOW()),
+('sport@omnes.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Nassim', 'Diallo', 'organisateur', 1, NULL, NOW()),
+('alice@omnes.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Alice', 'Moreau', 'participant', 1, NULL, NOW()),
+('hugo@omnes.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Hugo', 'Bernard', 'participant', 1, NULL, NOW()),
+('ines@omnes.fr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Ines', 'Petit', 'participant', 1, NULL, NOW());
 
 INSERT INTO associations(nom, url_logo, organisateur_id) VALUES
 ('BDE Omnes', NULL, 2),
