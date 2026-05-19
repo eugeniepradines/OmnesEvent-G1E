@@ -20,8 +20,9 @@ $places = placesRestantes($bdd, $evenement);
 $affiche = urlSite($evenement['url_affiche'] ?: '/assets/img/default-event.svg');
 $prixClasse = evenementGratuit($evenement) ? 'free' : 'paid';
 $aCoordonnees = $evenement['latitude'] !== null && $evenement['longitude'] !== null;
+$aCarte = $aCoordonnees || trim((string)($evenement['adresse_lieu'] ?? '')) !== '';
 $titrePage = $evenement['titre'];
-$styles = $aCoordonnees ? array('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css') : array();
+$styles = $aCarte ? array('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css') : array();
 include __DIR__ . '/../includes/header.php';
 ?>
 <section class="detail-hero" style="background-image: linear-gradient(180deg, rgba(13,15,20,.25), #0d0f14), url('<?php echo e($affiche); ?>');">
@@ -40,7 +41,7 @@ include __DIR__ . '/../includes/header.php';
             <p><strong>Organisateur</strong><?php echo e($evenement['prenom'] . ' ' . $evenement['nom']); ?></p>
             <p><strong>Places restantes</strong><span id="places-restantes"><?php echo $places; ?></span></p>
         </div>
-        <?php if ($aCoordonnees) { ?>
+        <?php if ($aCarte) { ?>
             <div id="event-map" class="event-map" data-lat="<?php echo e($evenement['latitude']); ?>" data-lng="<?php echo e($evenement['longitude']); ?>" data-title="<?php echo e($evenement['nom_lieu']); ?>" data-address="<?php echo e($evenement['adresse_lieu']); ?>"></div>
         <?php } ?>
     </article>
@@ -61,7 +62,7 @@ include __DIR__ . '/../includes/header.php';
     </aside>
 </section>
 <?php
-$scripts = $aCoordonnees
+$scripts = $aCarte
     ? array('/assets/js/reserve.js', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', '/assets/js/event-detail.js')
     : array('/assets/js/reserve.js');
 include __DIR__ . '/../includes/footer.php';

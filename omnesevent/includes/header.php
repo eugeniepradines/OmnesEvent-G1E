@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/auth.php';
 $titrePage = $titrePage ?? 'OmnesEvent';
-$assetVersion = '20260519c';
+$assetVersion = '20260519d';
 $utilisateurNav = null;
 if (isset($bdd)) {
     $utilisateurNav = getUtilisateur($bdd);
