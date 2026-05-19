@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/auth.php';
 $titrePage = $titrePage ?? 'OmnesEvent';
+$assetVersion = '20260519c';
 $utilisateurNav = null;
 if (isset($bdd)) {
     $utilisateurNav = getUtilisateur($bdd);
@@ -15,7 +16,10 @@ if (isset($bdd)) {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?php echo e(urlSite('/assets/css/style.css')); ?>">
+    <?php if (!empty($styles)) { foreach ($styles as $style) { ?>
+        <link rel="stylesheet" href="<?php echo e(urlSite($style)); ?>">
+    <?php } } ?>
+    <link rel="stylesheet" href="<?php echo e(urlSite('/assets/css/style.css') . '?v=' . $assetVersion); ?>">
 </head>
 <body data-base-url="<?php echo e(baseUrlSite()); ?>">
 <header class="site-header">

@@ -2,7 +2,7 @@ $(document).ready(function () {
     $('.reserve-btn').on('click', function () {
         var bouton = $(this);
         $.ajax({
-            url: '/omnesevent/api/reserve.php',
+            url: (window.APP_BASE_URL || '') + '/api/reserve.php',
             method: 'POST',
             dataType: 'json',
             data: {
@@ -14,7 +14,7 @@ $(document).ready(function () {
                 if (reponse.ok) {
                     $('#places-restantes').text(reponse.places);
                     if (reponse.action === 'annule') {
-                        bouton.text(reponse.places > 0 ? 'Reserver ma place' : 'Liste d attente');
+                        bouton.text(reponse.places > 0 ? bouton.data('reserve-label') : bouton.data('wait-label'));
                     } else {
                         bouton.text(reponse.action === 'liste_attente' ? 'Annuler ma liste d attente' : 'Annuler ma reservation');
                     }

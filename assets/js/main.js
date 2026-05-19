@@ -49,6 +49,40 @@ $(document).ready(function () {
         }
     });
 
+    function updatePriceField() {
+        $('[data-price-toggle]').each(function () {
+            var wrapper = $(this);
+            var mode = wrapper.find('input[name="mode_prix"]:checked').val();
+            var field = wrapper.siblings('[data-price-field]');
+            field.toggle(mode === 'payant');
+            field.find('input').prop('required', mode === 'payant');
+        });
+    }
+    $('[data-price-toggle] input').on('change', updatePriceField);
+    updatePriceField();
+
+    $(document).on('click', '.qr-open', function () {
+        var source = $(this).data('qr-src') || $(this).find('img').attr('src').replace('size=140x140', 'size=700x700');
+        var modal = $('.qr-modal');
+        modal.find('img').attr('src', source);
+        modal.addClass('open').attr('aria-hidden', 'false');
+        $('body').addClass('modal-open');
+    });
+
+    $('.qr-modal, .qr-modal-close').on('click', function (event) {
+        if ($(event.target).is('.qr-modal, .qr-modal-close')) {
+            $('.qr-modal').removeClass('open').attr('aria-hidden', 'true');
+            $('body').removeClass('modal-open');
+        }
+    });
+
+    $(document).on('keydown', function (event) {
+        if (event.key === 'Escape') {
+            $('.qr-modal').removeClass('open').attr('aria-hidden', 'true');
+            $('body').removeClass('modal-open');
+        }
+    });
+
     $('.confirm-form').on('submit', function (event) {
         if (!confirm('Confirmer cette action ?')) {
             event.preventDefault();

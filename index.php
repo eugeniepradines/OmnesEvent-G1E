@@ -79,13 +79,15 @@ include __DIR__ . '/includes/header.php';
     </div>
     <?php if ($prochainEvenement) {
         $affiche = urlSite($prochainEvenement['url_affiche'] ?: '/assets/img/default-event.svg');
+        $prixClasse = evenementGratuit($prochainEvenement) ? 'free' : 'paid';
     ?>
         <article class="featured-event panel">
             <a class="featured-poster" href="<?php echo e(urlSite('/event/detail.php?id=' . (int)$prochainEvenement['id'])); ?>">
                 <img src="<?php echo e($affiche); ?>" alt="<?php echo e($prochainEvenement['titre']); ?>">
+                <span class="badge price-badge <?php echo e($prixClasse); ?>"><?php echo e(libellePrix($prochainEvenement)); ?></span>
             </a>
             <div class="featured-content">
-                <span class="badge"><?php echo e($prochainEvenement['categorie']); ?></span>
+                <span class="badge category-badge"><?php echo e($prochainEvenement['categorie']); ?></span>
                 <h2><?php echo e($prochainEvenement['titre']); ?></h2>
                 <p><?php echo date('d/m/Y H:i', strtotime($prochainEvenement['date_evenement'])); ?></p>
                 <p><?php echo e($prochainEvenement['nom_lieu']); ?></p>

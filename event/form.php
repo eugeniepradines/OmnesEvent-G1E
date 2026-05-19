@@ -22,10 +22,16 @@
             <label>Adresse<input type="text" name="adresse_lieu" value="<?php echo e($evenement['adresse_lieu'] ?? ''); ?>"></label>
         </fieldset>
         <fieldset>
-            <legend>Affiche & Capacite</legend>
+            <legend>Affiche, capacite & prix</legend>
             <label>Affiche<input type="file" name="affiche" accept="image/jpeg,image/png,image/webp" class="preview-input"></label>
             <img class="preview-img" src="<?php echo e(!empty($evenement['url_affiche']) ? urlSite($evenement['url_affiche']) : ''); ?>" alt="">
             <label>Capacite<input type="number" name="capacite" min="1" required value="<?php echo e($evenement['capacite'] ?? ''); ?>"></label>
+            <?php $prixActuel = prixEvenement($evenement ?? array()); ?>
+            <div class="price-toggle" data-price-toggle>
+                <label><input type="radio" name="mode_prix" value="gratuit" <?php if ($prixActuel <= 0) echo 'checked'; ?>> Gratuit</label>
+                <label><input type="radio" name="mode_prix" value="payant" <?php if ($prixActuel > 0) echo 'checked'; ?>> Payant</label>
+            </div>
+            <label class="price-field" data-price-field>Prix en euros<input type="number" name="prix" min="0" step="0.01" value="<?php echo e(number_format($prixActuel, 2, '.', '')); ?>"></label>
         </fieldset>
         <button class="btn full" type="submit">Enregistrer</button>
     </form>

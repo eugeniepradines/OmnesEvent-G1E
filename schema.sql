@@ -22,8 +22,11 @@ CREATE TABLE evenements (
     date_evenement DATETIME NOT NULL,
     nom_lieu VARCHAR(180) NOT NULL,
     adresse_lieu VARCHAR(255),
+    latitude DECIMAL(10,7) NULL,
+    longitude DECIMAL(10,7) NULL,
     url_affiche VARCHAR(255),
     capacite INT NOT NULL,
+    prix DECIMAL(8,2) NOT NULL DEFAULT 0.00,
     cree_par INT NOT NULL,
     statut ENUM('en_attente','publie','annule') DEFAULT 'publie',
     cree_le DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -62,13 +65,13 @@ INSERT INTO associations(nom, url_logo, organisateur_id) VALUES
 ('BDE Omnes', NULL, 2),
 ('Omnes Sport', NULL, 3);
 
-INSERT INTO evenements(titre, description, categorie, date_evenement, nom_lieu, adresse_lieu, url_affiche, capacite, cree_par, statut, cree_le) VALUES
-('Soiree Neon Campus', 'Une soiree etudiante lumineuse avec DJ set et animations.', 'Soirée', '2026-06-12 20:30:00', 'Atrium Omnes', '10 rue Sextius Michel, Paris', '/omnesevent/assets/img/default-event.svg', 120, 2, 'publie', NOW()),
-('Tournoi Futsal Interpromo', 'Equipes mixtes, phase de poules puis finale.', 'Sport', '2026-06-18 18:00:00', 'Gymnase Omnes', 'Campus Lyon', '/omnesevent/assets/img/default-event.svg', 60, 3, 'publie', NOW()),
-('Expo Photo Campus', 'Exposition des meilleurs cliches realises par les etudiants.', 'Culture', '2026-06-22 12:00:00', 'Hall principal', 'Campus Paris', '/omnesevent/assets/img/default-event.svg', 80, 2, 'publie', NOW()),
-('Conference IA & Ethique', 'Rencontre autour des usages responsables de l intelligence artificielle.', 'Conférence', '2026-07-02 17:30:00', 'Amphi A', 'Campus Paris', '/omnesevent/assets/img/default-event.svg', 100, 2, 'publie', NOW()),
-('Afterwork Alumni', 'Temps reseau entre etudiants et anciens diplomes.', 'Autre', '2026-07-09 19:00:00', 'Rooftop Omnes', 'Campus Lyon', '/omnesevent/assets/img/default-event.svg', 90, 2, 'publie', NOW()),
-('Run Solidaire', 'Course de 5 km au profit d une association partenaire.', 'Sport', '2026-07-16 09:30:00', 'Parc Blandan', 'Lyon', '/omnesevent/assets/img/default-event.svg', 150, 3, 'publie', NOW());
+INSERT INTO evenements(titre, description, categorie, date_evenement, nom_lieu, adresse_lieu, latitude, longitude, url_affiche, capacite, prix, cree_par, statut, cree_le) VALUES
+('Soiree Neon Campus', 'Une soiree etudiante lumineuse avec DJ set et animations.', 'Soirée', '2026-06-12 20:30:00', 'Atrium Omnes', '10 rue Sextius Michel, Paris', 48.8466367, 2.2860259, '/omnesevent/assets/img/default-event.svg', 120, 0.00, 2, 'publie', NOW()),
+('Tournoi Futsal Interpromo', 'Equipes mixtes, phase de poules puis finale.', 'Sport', '2026-06-18 18:00:00', 'Gymnase Omnes', 'Campus Lyon', 45.7640430, 4.8356590, '/omnesevent/assets/img/default-event.svg', 60, 5.00, 3, 'publie', NOW()),
+('Expo Photo Campus', 'Exposition des meilleurs cliches realises par les etudiants.', 'Culture', '2026-06-22 12:00:00', 'Hall principal', 'Campus Paris', 48.8566140, 2.3522219, '/omnesevent/assets/img/default-event.svg', 80, 0.00, 2, 'publie', NOW()),
+('Conference IA & Ethique', 'Rencontre autour des usages responsables de l intelligence artificielle.', 'Conférence', '2026-07-02 17:30:00', 'Amphi A', 'Campus Paris', 48.8566140, 2.3522219, '/omnesevent/assets/img/default-event.svg', 100, 8.00, 2, 'publie', NOW()),
+('Afterwork Alumni', 'Temps reseau entre etudiants et anciens diplomes.', 'Autre', '2026-07-09 19:00:00', 'Rooftop Omnes', 'Campus Lyon', 45.7640430, 4.8356590, '/omnesevent/assets/img/default-event.svg', 90, 0.00, 2, 'publie', NOW()),
+('Run Solidaire', 'Course de 5 km au profit d une association partenaire.', 'Sport', '2026-07-16 09:30:00', 'Parc Blandan', 'Lyon', 45.7458768, 4.8511955, '/omnesevent/assets/img/default-event.svg', 150, 3.00, 3, 'publie', NOW());
 
 INSERT INTO inscriptions(evenement_id, utilisateur_id, statut, token_qr, inscrit_le, presente) VALUES
 (1, 4, 'confirme', 'qr_alice_neon_2026', NOW(), 0),
@@ -76,3 +79,4 @@ INSERT INTO inscriptions(evenement_id, utilisateur_id, statut, token_qr, inscrit
 (2, 4, 'confirme', 'qr_alice_futsal_2026', NOW(), 0),
 (3, 6, 'confirme', 'qr_ines_expo_2026', NOW(), 0),
 (4, 5, 'confirme', 'qr_hugo_ia_2026', NOW(), 0);
+

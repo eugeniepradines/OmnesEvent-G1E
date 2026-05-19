@@ -107,6 +107,52 @@ function promouvoirListeAttente($bdd, $evenement_id) {
     }
 }
 
+function prixEvenement($evenement) {
+    return isset($evenement['prix']) ? max(0, (float)$evenement['prix']) : 0;
+}
+
+function evenementGratuit($evenement) {
+    return prixEvenement($evenement) <= 0;
+}
+
+function libellePrix($evenement) {
+    if (evenementGratuit($evenement)) {
+        return 'Gratuit';
+    }
+    return number_format(prixEvenement($evenement), 2, ',', ' ') . ' €';
+}
+
+function libelleReservation($evenement) {
+    return evenementGratuit($evenement)
+        ? 'Réserver ma place — Gratuit'
+        : 'Acheter mon billet — ' . libellePrix($evenement);
+}
+
+function geocoderAdresse($adresse) {
+    $adresse = trim((string)$adresse);
+    if ($adresse === '' || !ini_get('allow_url_fopen')) {
+        return array(null, null);
+    }
+
+    $url = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' . rawurlencode($adresse);
+    $contexte = stream_context_create(array(
+        'http' => array(
+            'method' => 'GET',
+            'header' => "User-Agent: OmnesEvent/1.0\r\nAccept: application/json\r\n",
+            'timeout' => 4
+        )
+    ));
+    $reponse = @file_get_contents($url, false, $contexte);
+    if ($reponse === false) {
+        return array(null, null);
+    }
+    $resultats = json_decode($reponse, true);
+    if (empty($resultats[0]['lat']) || empty($resultats[0]['lon'])) {
+        return array(null, null);
+    }
+    return array((float)$resultats[0]['lat'], (float)$resultats[0]['lon']);
+}
+
 function uploadAffiche($champ) {
     if (!isset($_FILES[$champ]) || $_FILES[$champ]['error'] !== UPLOAD_ERR_OK) {
         return null;

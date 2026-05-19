@@ -7,6 +7,44 @@ function e($valeur) {
     return htmlspecialchars((string)$valeur, ENT_QUOTES, 'UTF-8');
 }
 
+function baseUrlSite() {
+    if (defined('APP_BASE_URL')) {
+        return rtrim(APP_BASE_URL, '/');
+    }
+    $racineDocument = realpath($_SERVER['DOCUMENT_ROOT'] ?? '');
+    $racineProjet = realpath(__DIR__ . '/..');
+    if ($racineDocument && $racineProjet && strpos(strtolower($racineProjet), strtolower($racineDocument)) === 0) {
+        $relatif = trim(str_replace('\\', '/', substr($racineProjet, strlen($racineDocument))), '/');
+        return $relatif !== '' ? '/' . $relatif : '';
+    }
+    $script = $_SERVER['SCRIPT_NAME'] ?? '';
+    $segments = explode('/', trim($script, '/'));
+    if (count($segments) === 1 && substr($segments[0], -4) === '.php') {
+        return '';
+    }
+    return !empty($segments[0]) && substr($segments[0], -4) !== '.php' ? '/' . $segments[0] : '';
+}
+
+function urlSite($chemin = '') {
+    if ($chemin === '') {
+        return baseUrlSite() ?: '/';
+    }
+    if (preg_match('#^(https?:)?//#', $chemin) || strpos($chemin, 'data:') === 0) {
+        return $chemin;
+    }
+    if (strpos($chemin, '/omnesevent/') === 0) {
+        $chemin = substr($chemin, strlen('/omnesevent'));
+    } elseif ($chemin[0] !== '/') {
+        $chemin = '/' . $chemin;
+    }
+    return baseUrlSite() . $chemin;
+}
+
+function rediriger($chemin) {
+    header('Location: ' . urlSite($chemin));
+    exit;
+}
+
 function estConnecte() {
     return isset($_SESSION['utilisateur_id']);
 }
@@ -35,8 +73,7 @@ function getUtilisateur($bdd) {
 
 function exigerConnexion() {
     if (!estConnecte()) {
-        header('Location: /omnesevent/login.php');
-        exit;
+        rediriger('/login.php');
     }
 }
 
@@ -46,8 +83,7 @@ function exigerRole($roles) {
         $roles = array($roles);
     }
     if (!in_array($_SESSION['role'], $roles)) {
-        header('Location: /omnesevent/index.php');
-        exit;
+        rediriger('/index.php');
     }
 }
 
@@ -71,6 +107,52 @@ function promouvoirListeAttente($bdd, $evenement_id) {
     }
 }
 
+function prixEvenement($evenement) {
+    return isset($evenement['prix']) ? max(0, (float)$evenement['prix']) : 0;
+}
+
+function evenementGratuit($evenement) {
+    return prixEvenement($evenement) <= 0;
+}
+
+function libellePrix($evenement) {
+    if (evenementGratuit($evenement)) {
+        return 'Gratuit';
+    }
+    return number_format(prixEvenement($evenement), 2, ',', ' ') . ' €';
+}
+
+function libelleReservation($evenement) {
+    return evenementGratuit($evenement)
+        ? 'Réserver ma place — Gratuit'
+        : 'Acheter mon billet — ' . libellePrix($evenement);
+}
+
+function geocoderAdresse($adresse) {
+    $adresse = trim((string)$adresse);
+    if ($adresse === '' || !ini_get('allow_url_fopen')) {
+        return array(null, null);
+    }
+
+    $url = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' . rawurlencode($adresse);
+    $contexte = stream_context_create(array(
+        'http' => array(
+            'method' => 'GET',
+            'header' => "User-Agent: OmnesEvent/1.0\r\nAccept: application/json\r\n",
+            'timeout' => 4
+        )
+    ));
+    $reponse = @file_get_contents($url, false, $contexte);
+    if ($reponse === false) {
+        return array(null, null);
+    }
+    $resultats = json_decode($reponse, true);
+    if (empty($resultats[0]['lat']) || empty($resultats[0]['lon'])) {
+        return array(null, null);
+    }
+    return array((float)$resultats[0]['lat'], (float)$resultats[0]['lon']);
+}
+
 function uploadAffiche($champ) {
     if (!isset($_FILES[$champ]) || $_FILES[$champ]['error'] !== UPLOAD_ERR_OK) {
         return null;
@@ -83,7 +165,7 @@ function uploadAffiche($champ) {
     $nom = uniqid('affiche_', true) . '.' . $typesAutorises[$type];
     $destination = __DIR__ . '/../assets/uploads/' . $nom;
     if (move_uploaded_file($_FILES[$champ]['tmp_name'], $destination)) {
-        return '/omnesevent/assets/uploads/' . $nom;
+        return '/assets/uploads/' . $nom;
     }
     return null;
 }

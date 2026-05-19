@@ -6,9 +6,10 @@
     <script>
         window.APP_BASE_URL = document.body.dataset.baseUrl || '';
     </script>
-    <script src="<?php echo e(urlSite('/assets/js/main.js')); ?>"></script>
+    <script src="<?php echo e(urlSite('/assets/js/main.js') . '?v=' . ($assetVersion ?? '1')); ?>"></script>
     <?php if (!empty($scripts)) { foreach ($scripts as $script) { ?>
-        <script src="<?php echo e(urlSite($script)); ?>"></script>
+        <?php $scriptUrl = urlSite($script); ?>
+        <script src="<?php echo e((preg_match('#^(https?:)?//#', $scriptUrl) ? $scriptUrl : $scriptUrl . '?v=' . ($assetVersion ?? '1'))); ?>"></script>
     <?php } } ?>
 </body>
 </html>

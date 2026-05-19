@@ -26,7 +26,7 @@ if ($inscription) {
     $maj = $bdd->prepare("UPDATE inscriptions SET statut = 'annule' WHERE id = ?");
     $maj->execute(array($inscription['id']));
     promouvoirListeAttente($bdd, $evenement_id);
-    echo json_encode(array('ok' => true, 'message' => 'Reservation annulee.', 'action' => 'annule', 'places' => placesRestantes($bdd, $evenement)));
+    echo json_encode(array('ok' => true, 'message' => 'Reservation annulee. La premiere personne en liste d attente est confirmee automatiquement si une place etait disponible.', 'action' => 'annule', 'places' => placesRestantes($bdd, $evenement)));
     exit;
 }
 
@@ -34,5 +34,5 @@ $statut = placesRestantes($bdd, $evenement) > 0 ? 'confirme' : 'liste_attente';
 $token = bin2hex(random_bytes(32));
 $ajout = $bdd->prepare('INSERT INTO inscriptions(evenement_id, utilisateur_id, statut, token_qr, inscrit_le, presente) VALUES(?,?,?,?,NOW(),0)');
 $ajout->execute(array($evenement_id, $_SESSION['utilisateur_id'], $statut, $token));
-echo json_encode(array('ok' => true, 'message' => $statut === 'confirme' ? 'Reservation confirmee.' : 'Vous etes en liste d attente.', 'action' => $statut, 'places' => placesRestantes($bdd, $evenement)));
+echo json_encode(array('ok' => true, 'message' => $statut === 'confirme' ? 'Reservation confirmee.' : 'Evenement complet : vous etes en liste d attente et serez confirme automatiquement si une place se libere.', 'action' => $statut, 'places' => placesRestantes($bdd, $evenement)));
 ?>
